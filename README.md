@@ -1,10 +1,10 @@
-# EnvSample-Free 3D Gaussian Splatting
+# Neural Gaussian Splatting for Physically Based Rendering without Environment Light Sampling
 
-Official implementation of **"EnvSample-Free 3D Gaussian Splatting"**.
+Official implementation of **"Neural Gaussian Splatting for Physically Based Rendering without Environment Light Sampling"**.
 
 ## Overview
 
-EnvSample-Free 3DGS is a novel rendering framework based on **3D Gaussian Splatting (3DGS)** for efficient scene reconstruction and photorealistic novel-view synthesis.
+Neural Gaussian Splatting for Physically Based Rendering without Environment Light Sampling is a novel rendering framework based on **3D Gaussian Splatting (3DGS)** for efficient scene reconstruction and photorealistic novel-view synthesis.
 
 ------
 
