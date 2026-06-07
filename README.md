@@ -2,6 +2,8 @@
 
 **面向无环境光采样的神经高斯物理泼溅方法**官方实现
 
+Official implementation of **"Neural Gaussian Splatting for Physically Based Rendering without Environment Light Sampling"**.（For the English README, please click [here](README_EN.md).）
+
 ## Overview
 
 **面向无环境光采样的神经高斯物理泼溅方法**提出了一种基于 **3D Gaussian Splatting（3DGS）** 的新型渲染框架，旨在提高3DGS对于镜面反射的表达，能够高效地完成场景重建，并实现具有真实感的新视角渲染。
