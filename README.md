@@ -37,33 +37,17 @@ cd EnvSample_Free_3DGS
 ### Create Environment
 
 ```bash
-conda create -n envsample_free_3dgs python=3.10
+conda env create -f environment.yml
 conda activate envsample_free_3dgs
 ```
 
-### Install Dependencies
-
-```bash
-pip install -r requirements.txt
-```
+### 
 
 ------
 
 ## Dataset
 
-The dataset should be organized as follows:
-
-```text
-dataset/
-├── luyu_blender/
-│   ├── train/
-│   ├── test/
-│   ├── transforms_train.json
-│   └── transforms_test.json
-├── horse_blender/
-```
-
-------
+We primarily evaluate our method on the [Glossy Synthetic](https://liuyuan-pal.github.io/NeRO/)，[Shiny Blender Real](https://storage.googleapis.com/gresearch/refraw360/ref_real.zip),[Glossy Real](https://liuyuan-pal.github.io/NeRO/)
 
 ## Training
 
@@ -88,7 +72,9 @@ python train.py \
 | --roughness | Roughness default value of scene |
 | --metallic  | Metallic default value of scene  |
 
-------
+> To evaluate the Glossy Synthetic dataset, use `--roughness 0.3 --metallic 0.7`, as the scenes mainly contain highly reflective and metallic materials.
+>
+> To evaluate the Shiny Blender Real and Glossy Real datasets, use `--roughness 0.7 --metallic 0.3`, as these datasets generally exhibit rougher surfaces and weaker metallic reflections.
 
 ## Rendering
 
@@ -96,14 +82,6 @@ Render trained results using:
 
 ```bash
 python render.py -m output/luyu_blender
-```
-
-Rendered images will be saved to:
-
-```text
-output/
-└── luyu_blender/
-    └── renders/
 ```
 
 ------
@@ -116,20 +94,17 @@ output/
 
 ### Quantitative Results
 
-| Method | PSNR ↑ | SSIM ↑ | LPIPS ↓ |
-| ------ | ------ | ------ | ------- |
-| 3DGS   | -      | -      | -       |
-| Ours   | -      | -      | -       |
+Glossy Synthetic
 
-------
+| Method  | PSNR ↑    | SSIM ↑    | LPIPS ↓   | Train Time | FPS  |
+| ------- | --------- | --------- | --------- | ---------- | ---- |
+| 3DGS    | 26.17     | 0.915     | 0.087     | 00:06:15   | 131  |
+| GShader | 27.07     | 0.923     | 0.083     | 01:04:00   | 39   |
+| Ours    | **27.75** | **0.929** | **0.075** | 00:20:21   | 57   |
 
 ## Citation
 
-If you find our work useful, please cite:
 
-```bibtex
-
-```
 
 ------
 
@@ -140,7 +115,3 @@ This work is built upon the following excellent projects:
 - NeRF
 - 3D Gaussian Splatting
 - GaussianShader
-
-We thank the authors for making their code publicly available.
-
-## 
