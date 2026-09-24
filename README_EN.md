@@ -2,6 +2,8 @@
 
 Official implementation of **"Neural Gaussian Splatting for Physically Based Rendering without Environment Light Sampling"**.
 
+[SIBR viewer demo video (MP4)](docs/video/show.mp4)
+
 ## Overview
 
 Neural Gaussian Splatting for Physically Based Rendering without Environment Light Sampling is a novel rendering framework based on **3D Gaussian Splatting (3DGS)**, to enhance the specular component synthetic of 3DGS, for efficient scene reconstruction and photorealistic novel-view synthesis.
@@ -47,7 +49,7 @@ conda activate envsample_free_3dgs
 
 ## Dataset
 
-We primarily evaluate our method on the [Glossy Synthetic](https://liuyuan-pal.github.io/NeRO/), [Shiny Blender Real](https://storage.googleapis.com/gresearch/refraw360/ref_real.zip), [Glossy Real](https://liuyuan-pal.github.io/NeRO/)
+We primarily evaluate our method on the [Glossy Synthetic](https://liuyuan-pal.github.io/NeRO/), [Ref Real](https://storage.googleapis.com/gresearch/refraw360/ref_real.zip), [Glossy Real](https://liuyuan-pal.github.io/NeRO/)
 
 ## Training
 
@@ -74,7 +76,7 @@ python train.py \
 
 > To evaluate the Glossy Synthetic dataset, use `--roughness 0.3 --metallic 0.7`, as the scenes mainly contain highly reflective and metallic materials.
 >
-> To evaluate the Shiny Blender Real and Glossy Real datasets, use `--roughness 0.7 --metallic 0.3`, as these datasets generally exhibit rougher surfaces and weaker metallic reflections.
+> To evaluate the Ref Real and Glossy Real datasets, use `--roughness 0.7 --metallic 0.3`, as these datasets generally exhibit rougher surfaces and weaker metallic reflections.
 
 ## Rendering
 
@@ -83,6 +85,13 @@ Render trained results using:
 ```bash
 python render.py -m output/luyu_blender
 ```
+
+### SIBR Interactive Viewer
+
+Instructions for building and running the Windows SIBR viewer:
+
+- [Build and run guide (English)](docs/sibr_viewer_install_run_en.md)
+- [安装与运行指南（中文）](docs/sibr_viewer_install_run_zh.md)
 
 ------
 
@@ -96,11 +105,11 @@ python render.py -m output/luyu_blender
 
 Glossy Synthetic
 
-| Method  | PSNR ↑    | SSIM ↑    | LPIPS ↓   | Train Time | FPS  |
-| ------- | --------- | --------- | --------- | ---------- | ---- |
-| 3DGS    | 26.17     | 0.915     | 0.087     | 00:06:15   | 131  |
-| GShader | 27.07     | 0.923     | 0.083     | 01:04:00   | 39   |
-| Ours    | **27.75** | **0.929** | **0.075** | 00:20:21   | 57   |
+| Method  | PSNR ↑    | SSIM ↑    | LPIPS ↓   | Train Time (min) | FPS  |
+| ------- | --------- | --------- | --------- | ---------------- | ---- |
+| 3DGS    | 26.17     | 0.915     | 0.087     | 6.25             | 130  |
+| GShader | 27.07     | 0.923     | 0.083     | 64.00            | 39   |
+| Ours    | **27.75** | **0.929** | **0.076** | 20.35            | 57   |
 
 ## Citation
 

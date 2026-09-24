@@ -1,0 +1,1 @@
+Namespace(sh_degree=3, source_path='/root/autodl-tmp/GlossySynthetic/angel_blender', model_path='/root/autodl-tmp/angel2', images='images', resolution=-1, white_background=True, data_device='cuda', eval=True)

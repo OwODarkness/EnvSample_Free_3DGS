@@ -4,6 +4,8 @@
 
 Official implementation of **"Neural Gaussian Splatting for Physically Based Rendering without Environment Light Sampling"**.（For the English README, please click [here](README_EN.md).）
 
+[SIBR 查看器演示视频（MP4）](docs/video/show.mp4)
+
 ## Overview
 
 **面向无环境光采样的神经高斯物理泼溅方法**提出了一种基于 **3D Gaussian Splatting（3DGS）** 的新型渲染框架，旨在提高3DGS对于镜面反射的表达，能够高效地完成场景重建，并实现具有真实感的新视角渲染。
@@ -49,7 +51,7 @@ conda activate envsample_free_3dgs
 
 ## 数据集
 
-我们的实验主要在 [Glossy Synthetic](https://liuyuan-pal.github.io/NeRO/), [Shiny Blender Real](https://storage.googleapis.com/gresearch/refraw360/ref_real.zip), [Glossy Real](https://liuyuan-pal.github.io/NeRO/)数据集上进行
+我们的实验主要在 [Glossy Synthetic](https://liuyuan-pal.github.io/NeRO/), [Ref Real](https://storage.googleapis.com/gresearch/refraw360/ref_real.zip), [Glossy Real](https://liuyuan-pal.github.io/NeRO/)数据集上进行
 
 ## 训练
 
@@ -76,13 +78,20 @@ python train.py \
 
 > 对于 **Glossy Synthetic** 数据集，请使用 `--roughness 0.3 --metallic 0.7`，因为该数据集中的场景主要包含高反射率和金属材质表面。
 >
-> 对于 **Shiny Blender Real** 和 **Glossy Real** 数据集，请使用 `--roughness 0.7 --metallic 0.3`，因为这些数据集通常具有更粗糙的表面特性以及较弱的金属反射属性。
+> 对于 **Ref Real** 和 **Glossy Real** 数据集，请使用 `--roughness 0.7 --metallic 0.3`，因为这些数据集通常具有更粗糙的表面特性以及较弱的金属反射属性。
 
 ## 渲染
 
 ```bash
 python render.py -m output/luyu_blender
 ```
+
+### SIBR 交互式查看器
+
+Windows 下的 SIBR 查看器编译与运行说明：
+
+- [安装与运行指南（中文）](docs/sibr_viewer_install_run_zh.md)
+- [Build and run guide (English)](docs/sibr_viewer_install_run_en.md)
 
 ------
 
@@ -96,11 +105,11 @@ Glossy Synthetic
 
 ### 定量评估
 
-| Method  | PSNR ↑    | SSIM ↑    | LPIPS ↓   | Train Time | FPS  |
-| ------- | --------- | --------- | --------- | ---------- | ---- |
-| 3DGS    | 26.17     | 0.915     | 0.087     | 00:06:15   | 131  |
-| GShader | 27.07     | 0.923     | 0.083     | 01:04:00   | 39   |
-| Ours    | **27.75** | **0.929** | **0.075** | 00:20:21   | 57   |
+| Method  | PSNR ↑    | SSIM ↑    | LPIPS ↓   | Train Time (min) | FPS  |
+| ------- | --------- | --------- | --------- | ---------------- | ---- |
+| 3DGS    | 26.17     | 0.915     | 0.087     | 6.25             | 130  |
+| GShader | 27.07     | 0.923     | 0.083     | 64.00            | 39   |
+| Ours    | **27.75** | **0.929** | **0.076** | 20.35            | 57   |
 
 
 

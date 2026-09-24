@@ -2,6 +2,10 @@
 .vscode
 output
 build
+# SIBR viewer generated build and install output.
+/SIBR_viewers/build*/
+/SIBR_viewers/install/
+/SIBR_viewers/**/build*/
 diff_rasterization/diff_rast.egg-info
 diff_rasterization1/diff_rast.egg-info
 diff_rasterization/dist
