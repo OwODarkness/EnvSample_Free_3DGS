@@ -4,7 +4,7 @@
 
 Official implementation of **"Neural Gaussian Splatting for Physically Based Rendering without Environment Light Sampling"**.（For the English README, please click [here](README_EN.md).）
 
-[SIBR 查看器演示视频（MP4）](docs/video/show.mp4)
+[![SIBR 查看器演示视频（README 内自动播放；点击查看 MP4）](docs/video/show_preview.gif)](https://github.com/OwODarkness/EnvSample_Free_3DGS/blob/main/docs/video/show.mp4)
 
 ## Overview
 
@@ -14,9 +14,9 @@ Official implementation of **"Neural Gaussian Splatting for Physically Based Ren
 
 ## Method
 
- 近年来，三维高斯泼溅开始通过物理反射模型增强镜面反射成分，以提升新视角合成质量。然而，这类方法通常需要在训练过程中对可微环境光进行采样和积分，使得渲染质量与计算效率难以兼顾。
+近年来，三维高斯泼溅开始通过物理反射模型增强镜面反射成分，以提升新视角合成质量。然而，这类方法通常需要在训练阶段对可微环境贴图进行显式多方向采样与积分，增加计算开销。
 
-为解决此类问题，提出一种面向无环境光采样的神经高斯泼溅物理渲染方法，通过轻量化双网络结构对低频镜面反射进行隐式建模，并结合球谐函数与Cook–Torrance模型补充高频信息，在无需环境光采样积分的条件下，解决同阶球谐函数难以同时刻画低频与高频信号所导致的伪影问题，实现不同频段反射成分的统一建模和高效渲染。另外，为克服对三维高斯图元进行表面法线估计的挑战，提出一种基于特征值引导的法线收缩策略，引导可靠表面法线重建。
+为此，提出一种面向无环境光显式采样的神经高斯泼溅物理渲染方法，通过轻量化双网络结构对低频镜面反射进行隐式建模，并结合球谐函数与 Cook–Torrance 模型补充高频信息，从而避免训练阶段对可微环境贴图进行显式采样与积分。此外，提出基于特征值引导的法线收缩策略，以提升表面法线重建的稳定性。
 
 ![](docs/figs/pipeline.png)
 
@@ -97,20 +97,62 @@ Windows 下的 SIBR 查看器编译与运行说明：
 
 ## 结果
 
-Glossy Synthetic
+### Glossy Synthetic
 
-### 定性评估
+![Glossy Synthetic 定性对比及局部放大](docs/figs/glossy_synthetic_comparison_zoom.png)
 
-![](docs/figs/compare.png)
+**定量结果**
 
-### 定量评估
+| Method | PSNR ↑ | SSIM ↑ | LPIPS ↓ |
+| ------ | -----: | -----: | ------: |
+| 3DGS | 26.17 | 0.915 | 0.087 |
+| GShader | 27.07 | 0.923 | 0.083 |
+| GS-IR | 26.50 | 0.915 | 0.084 |
+| 3DGS-DR | 27.71 | **0.935** | **0.072** |
+| Ours | **27.75** | 0.929 | 0.076 |
 
-| Method  | PSNR ↑    | SSIM ↑    | LPIPS ↓   | Train Time (min) | FPS  |
-| ------- | --------- | --------- | --------- | ---------------- | ---- |
-| 3DGS    | 26.17     | 0.915     | 0.087     | 6.25             | 130  |
-| GShader | 27.07     | 0.923     | 0.083     | 64.00            | 39   |
-| Ours    | **27.75** | **0.929** | **0.076** | 20.35            | 57   |
+**训练效率（Glossy Synthetic）**
 
+| Method | Train Time (min) ↓ | FPS ↑ |
+| ------ | -----------------: | ----: |
+| 3DGS | 6.25 | 130 |
+| GShader | 64.00 | 39 |
+| Ours | 20.35 | 57 |
 
+### Ref Real
 
+![Ref Real 定性对比及局部放大](docs/figs/ref_real_comparison_zoom.png)
 
+| Method | PSNR ↑ | SSIM ↑ | LPIPS ↓ |
+| ------ | -----: | -----: | ------: |
+| 3DGS | **23.59** | **0.642** | **0.268** |
+| GShader | 22.49 | 0.623 | 0.324 |
+| GS-IR | 23.33 | 0.631 | 0.304 |
+| 3DGS-DR | 23.54 | 0.641 | 0.297 |
+| Ours | 23.52 | 0.638 | 0.293 |
+
+### Glossy Real
+
+![Glossy Real 定性对比及局部放大](docs/figs/glossy_real_comparison_zoom.png)
+
+| Method | PSNR ↑ | SSIM ↑ | LPIPS ↓ |
+| ------ | -----: | -----: | ------: |
+| 3DGS | 22.88 | 0.814 | **0.210** |
+| GShader | 21.98 | 0.791 | 0.248 |
+| GS-IR | 22.78 | 0.810 | 0.226 |
+| 3DGS-DR | 21.59 | 0.793 | 0.243 |
+| Ours | **23.05** | **0.815** | 0.215 |
+
+### 法线重建（Glossy Synthetic）
+
+![Glossy Synthetic 法线重建对比与角度误差图](docs/figs/normal_comparison.png)
+
+定量结果为 Glossy Synthetic 八个场景指标的算术平均；Acc@τ 表示 GT 与预测前景交集内、法线角度误差不超过 τ 的像素比例。
+
+| Method | Cosine ↑ | 平均角度误差 ↓ (°) | RMSE ↓ (°) | Acc@11.25° ↑ | Acc@22.5° ↑ | Acc@30° ↑ |
+| ------ | -------: | -----------------: | ---------: | ------------: | ----------: | --------: |
+| 3DGS | 0.6037 | 48.67 | 54.88 | 4.42% | 15.88% | 26.11% |
+| GShader | 0.8830 | 22.27 | 28.86 | 32.32% | 63.87% | 76.26% |
+| GS-IR | 0.7948 | 32.56 | 38.40 | 12.36% | 37.44% | 53.30% |
+| 3DGS-DR | 0.8815 | 21.65 | 28.71 | 38.66% | 66.33% | 76.94% |
+| Ours | **0.9002** | **20.66** | **26.11** | 33.67% | **66.68%** | **79.68%** |

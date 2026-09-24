@@ -2,7 +2,7 @@
 
 Official implementation of **"Neural Gaussian Splatting for Physically Based Rendering without Environment Light Sampling"**.
 
-[SIBR viewer demo video (MP4)](docs/video/show.mp4)
+[![SIBR viewer demo (animated preview; click for the MP4)](docs/video/show_preview.gif)](https://github.com/OwODarkness/EnvSample_Free_3DGS/blob/main/docs/video/show.mp4)
 
 ## Overview
 
@@ -12,9 +12,9 @@ Neural Gaussian Splatting for Physically Based Rendering without Environment Lig
 
 ## Method
 
-In recent years, 3D Gaussian splatting has leveraged physical reflection models to enhance specular reflection. However, these methods typically require differentiable environment light sampling during training, making it challenging to balance rendering quality and computational efficiency. 
+Recent 3D Gaussian Splatting methods use physically based reflection models to improve specular appearance, but often perform explicit multi-directional sampling and integration of a differentiable environment map during training, increasing computational cost.
 
- We propose a neural Gaussian splatting physical rendering method without environment light sampling, which employs a lightweight dual-network architecture to implicitly model low-frequency specular reflections and combines spherical harmonics with the Cook-Torrance model to supplement high-frequency information. This design simultaneously resolves the limitations of single-order spherical harmonics in capturing both low-frequency and high-frequency signals without introducing artifacts, achieving unified modeling of different frequency reflection components and efficient rendering. Furthermore, to overcome the challenge of estimating surface normals for 3D Gaussian primitives, we introduce an eigenvalue-guided normal contraction strategy to guide reliable surface normal reconstruction.
+We introduce a neural Gaussian splatting renderer without explicit environment-light sampling. A lightweight dual-network structure implicitly models low-frequency specular reflections, while spherical harmonics and the Cook–Torrance model supplement high-frequency details. This avoids explicit sampling and integration of a differentiable environment map during training. We also introduce an eigenvalue-guided normal contraction strategy to improve the stability of surface normal reconstruction.
 
 ![](docs/figs/pipeline_english.png)
 
@@ -97,19 +97,65 @@ Instructions for building and running the Windows SIBR viewer:
 
 ## Results
 
-### Qualitative Results
+### Glossy Synthetic
 
-![](docs/figs/compare.png)
+![Glossy Synthetic qualitative comparison with zoomed details](docs/figs/glossy_synthetic_comparison_zoom.png)
 
-### Quantitative Results
+**Quantitative results**
 
-Glossy Synthetic
+| Method | PSNR ↑ | SSIM ↑ | LPIPS ↓ |
+| ------ | -----: | -----: | ------: |
+| 3DGS | 26.17 | 0.915 | 0.087 |
+| GShader | 27.07 | 0.923 | 0.083 |
+| GS-IR | 26.50 | 0.915 | 0.084 |
+| 3DGS-DR | 27.71 | **0.935** | **0.072** |
+| Ours | **27.75** | 0.929 | 0.076 |
 
-| Method  | PSNR ↑    | SSIM ↑    | LPIPS ↓   | Train Time (min) | FPS  |
-| ------- | --------- | --------- | --------- | ---------------- | ---- |
-| 3DGS    | 26.17     | 0.915     | 0.087     | 6.25             | 130  |
-| GShader | 27.07     | 0.923     | 0.083     | 64.00            | 39   |
-| Ours    | **27.75** | **0.929** | **0.076** | 20.35            | 57   |
+**Training efficiency (Glossy Synthetic)**
+
+| Method | Train Time (min) ↓ | FPS ↑ |
+| ------ | -----------------: | ----: |
+| 3DGS | 6.25 | 130 |
+| GShader | 64.00 | 39 |
+| Ours | 20.35 | 57 |
+
+### Ref Real
+
+![Ref Real qualitative comparison with zoomed details](docs/figs/ref_real_comparison_zoom.png)
+
+| Method | PSNR ↑ | SSIM ↑ | LPIPS ↓ |
+| ------ | -----: | -----: | ------: |
+| 3DGS | **23.59** | **0.642** | **0.268** |
+| GShader | 22.49 | 0.623 | 0.324 |
+| GS-IR | 23.33 | 0.631 | 0.304 |
+| 3DGS-DR | 23.54 | 0.641 | 0.297 |
+| Ours | 23.52 | 0.638 | 0.293 |
+
+### Glossy Real
+
+![Glossy Real qualitative comparison with zoomed details](docs/figs/glossy_real_comparison_zoom.png)
+
+| Method | PSNR ↑ | SSIM ↑ | LPIPS ↓ |
+| ------ | -----: | -----: | ------: |
+| 3DGS | 22.88 | 0.814 | **0.210** |
+| GShader | 21.98 | 0.791 | 0.248 |
+| GS-IR | 22.78 | 0.810 | 0.226 |
+| 3DGS-DR | 21.59 | 0.793 | 0.243 |
+| Ours | **23.05** | **0.815** | 0.215 |
+
+### Normal Reconstruction (Glossy Synthetic)
+
+![Glossy Synthetic normal reconstruction and angular-error comparison](docs/figs/normal_comparison.png)
+
+Quantitative results are the arithmetic means across the eight Glossy Synthetic scenes. Acc@τ is the percentage of pixels in the intersection of the GT and predicted foreground masks whose normal angular error is at most τ.
+
+| Method | Cosine ↑ | Mean angle error ↓ (°) | RMSE ↓ (°) | Acc@11.25° ↑ | Acc@22.5° ↑ | Acc@30° ↑ |
+| ------ | -------: | --------------------: | ---------: | ------------: | ----------: | --------: |
+| 3DGS | 0.6037 | 48.67 | 54.88 | 4.42% | 15.88% | 26.11% |
+| GShader | 0.8830 | 22.27 | 28.86 | 32.32% | 63.87% | 76.26% |
+| GS-IR | 0.7948 | 32.56 | 38.40 | 12.36% | 37.44% | 53.30% |
+| 3DGS-DR | 0.8815 | 21.65 | 28.71 | 38.66% | 66.33% | 76.94% |
+| Ours | **0.9002** | **20.66** | **26.11** | 33.67% | **66.68%** | **79.68%** |
 
 ## Citation
 
